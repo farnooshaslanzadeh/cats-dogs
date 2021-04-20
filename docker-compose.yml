@@ -1,0 +1,76 @@
+version: '3'
+services:
+  vote:
+    build:
+      context: ./vote
+      dockerfile: Dockerfile.dev
+    command: python app.py
+    volumes:
+      - ./vote:/app
+    networks:
+      - frontend
+      - backend
+    ports:
+      - 5000:80
+    depends_on:
+      - redis     
+
+
+
+
+
+  result:
+    build: ./result
+    command: nodemon server.js
+    volumes:
+      - ./result:/app
+    ports:
+     - 5001:80
+     - 5858:5858
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - db
+
+
+
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.j
+    networks:
+      - backend
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+
+
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+
+
+volumes:
+  db-data:
+
+
+networks:
+  frontend:
+  backend:
