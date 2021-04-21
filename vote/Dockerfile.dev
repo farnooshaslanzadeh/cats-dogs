@@ -1,6 +1,10 @@
 # Using official python runtime base image
+ARG BASE_IMAGE_TAG
 FROM python:3.9-slim
-
+ARG OPTION_A
+ARG OPTION_B
+ENV OPTION_A $OPTION_A \
+    OPTION_B $OPTION_B
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     curl \

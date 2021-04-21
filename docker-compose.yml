@@ -4,28 +4,42 @@ services:
     build:
       context: ./vote
       dockerfile: Dockerfile.dev
-    command: python app.py
+      args:
+          - OPTION_A
+          - OPTION_B
+          - BASE_IMAGE_TAG
+      
+    environment:
+          - OPTION_A=Icecream
+          - OPTION_B=pizza
+          - BASE_IMAGE_TAG=v2
+    command: python app.py 
     volumes:
-      - ./vote:/app
+        - ./vote:/app
     networks:
-      - frontend
-      - backend
+        - frontend
+        - backend
     ports:
-      - 5000:80
+        - 5000:80
     depends_on:
-      - redis     
+        - redis     
 
 
 
 
 
   result:
-    build: ./result
+    build:
+      context: ./result
+      args:
+        - PORT
+    environment:
+      - PORT=8080
     command: nodemon server.js
     volumes:
       - ./result:/app
     ports:
-     - 5001:80
+     - 5001:8080
      - 5858:5858
     networks:
       - frontend

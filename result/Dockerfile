@@ -20,9 +20,8 @@ RUN npm ci \
  && mv /app/node_modules /node_modules
 
 COPY . .
-
-ENV PORT 80
-
+ARG PORT
+ENV PORT=$PORT
 EXPOSE 80
 
 CMD ["/tini", "--", "node", "server.js"]
